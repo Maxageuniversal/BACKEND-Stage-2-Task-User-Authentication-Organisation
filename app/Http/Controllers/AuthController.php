@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Organisation;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
@@ -18,8 +16,8 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'firstName' => 'required|string',
             'lastName' => 'required|string',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|string|min:6',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string',
             'phone' => 'nullable|string',
         ]);
 
@@ -40,30 +38,24 @@ class AuthController extends Controller
             'phone' => $request->input('phone'),
         ]);
 
-        // Create default organisation for the user
-        $organisation = Organisation::create([
+        // Create default organisation
+        $organisation = new Organisation([
             'name' => $user->firstName . "'s Organisation",
-            'description' => 'Default organisation for ' . $user->firstName,
+            'description' => 'Default organisation created during registration.',
         ]);
+        $organisation->save();
 
         // Attach user to organisation
         $organisation->users()->attach($user);
 
         // Generate JWT token
-        try {
-            $token = JWTAuth::fromUser($user);
-        } catch (JWTException $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Could not create token',
-            ], 500);
-        }
+        $accessToken = auth()->login($user);
 
         return response()->json([
             'status' => 'success',
             'message' => 'Registration successful',
             'data' => [
-                'accessToken' => $token,
+                'accessToken' => $accessToken,
                 'user' => $user,
             ],
         ], 201);
@@ -82,35 +74,28 @@ class AuthController extends Controller
                 'status' => 'Bad Request',
                 'message' => 'Authentication failed',
                 'errors' => $validator->errors()->toArray(),
+            ], 400);
+        }
+
+        // Attempt to authenticate user
+        if (!$token = auth()->attempt($request->only('email', 'password'))) {
+            return response()->json([
+                'status' => 'Bad Request',
+                'message' => 'Invalid credentials',
             ], 401);
         }
 
-        // Attempt to log user in
-        $credentials = $request->only('email', 'password');
+        return $this->respondWithToken($token);
+    }
 
-        try {
-            if (!$token = JWTAuth::attempt($credentials)) {
-                return response()->json([
-                    'status' => 'Bad Request',
-                    'message' => 'Invalid credentials',
-                ], 401);
-            }
-        } catch (JWTException $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Could not create token',
-            ], 500);
-        }
-
-        // Retrieve user details
-        $user = auth()->user();
-
+    protected function respondWithToken($token)
+    {
         return response()->json([
             'status' => 'success',
             'message' => 'Login successful',
             'data' => [
                 'accessToken' => $token,
-                'user' => $user,
+                'user' => auth()->user(),
             ],
         ], 200);
     }
