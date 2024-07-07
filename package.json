@@ -1,4 +1,32 @@
 {
+    {
+        "name": "backend-auth-org",
+        "version": "1.0.0",
+        "private": true,
+        "scripts": {
+          "dev": "npm run development",
+          "development": "mix",
+          "watch": "mix watch",
+          "watch-poll": "mix watch -- --watch-options-poll=1000",
+          "hot": "mix watch --hot",
+          "prod": "npm run production",
+          "production": "mix --production"
+        },
+        "devDependencies": {
+          "axios": "^0.21",
+          "cross-env": "^7.0",
+          "laravel-mix": "^6.0.14",
+          "lodash": "^4.17.19",
+          "postcss": "^8.3",
+          "resolve-url-loader": "^4.0.0",
+          "sass": "^1.32",
+          "sass-loader": "^12.1"
+        }
+      }
+
+
+
+
     "private": true,
     "type": "module",
     "scripts": {
