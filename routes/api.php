@@ -7,7 +7,12 @@ use App\Http\Controllers\OrganisationController;
 
 // Public routes
 Route::post('/auth/register', [AuthController::class, 'register']);
-Route::post('/auth/login', [AuthController::class, 'login']);
+Route::get('/api/organisations', [OrganisationController::class, 'index']);
+
+// Example with a prefix in routes/api.php
+Route::group(['prefix' => 'api'], function () {
+    Route::get('organisations', [OrganisationController::class, 'index']);
+});
 
 // Protected routes
 Route::middleware('auth:api')->group(function () {
