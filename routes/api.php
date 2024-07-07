@@ -5,21 +5,23 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrganisationController;
 
+// Public routes
 Route::post('/auth/register', [AuthController::class, 'register']);
 Route::post('/auth/login', [AuthController::class, 'login']);
 
+// Protected routes
 Route::middleware('auth:api')->group(function () {
+    // User-specific routes
     Route::get('/api/users/{id}', function (Request $request, $id) {
         // Logic to retrieve user data
     });
 
+    // JWT authenticated routes
     Route::group(['middleware' => 'jwt.auth'], function () {
-        // Protected routes here
-        Route::get('/organisations', [OrganisationController::class, 'index']);
-        Route::get('/organisations/{orgId}', [OrganisationController::class, 'show']);
-        Route::post('/organisations', [OrganisationController::class, 'store']);
-        Route::post('/organisations/{orgId}/users', [OrganisationController::class, 'addUser']);
+        // Organisation routes
+        Route::get('/api/organisations', [OrganisationController::class, 'index']);
+        Route::get('/api/organisations/{orgId}', [OrganisationController::class, 'show']);
+        Route::post('/api/organisations', [OrganisationController::class, 'store']);
+        Route::post('/api/organisations/{orgId}/users', [OrganisationController::class, 'addUser']);
     });
 });
-
-// Ensure there's no extra closing brace or semicolon here
