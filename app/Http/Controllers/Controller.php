@@ -11,4 +11,5 @@ class Controller extends BaseController
     {
         return response()->json(['message' => 'Hello from API']);
     }
+
 }
