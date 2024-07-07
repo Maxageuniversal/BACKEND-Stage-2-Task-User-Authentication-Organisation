@@ -81,17 +81,18 @@ return [
 'pgsql' => [
     'driver' => 'pgsql',
     'url' => env('DATABASE_URL'),
-    'host' => env('PGHOST', 'localhost'), // Use PGHOST from .env
-    'port' => env('PGPORT', '5432'),      // Use PGPORT from .env
-    'database' => env('POSTGRES_DB', 'railway'), // Use POSTGRES_DB from .env
-    'username' => env('POSTGRES_USER', 'postgres'), // Use POSTGRES_USER from .env
-    'password' => env('POSTGRES_PASSWORD', ''), // Use POSTGRES_PASSWORD from .env
+    'host' => env('DB_HOST', 'localhost'),
+    'port' => env('DB_PORT', '5432'),
+    'database' => env('DB_DATABASE', 'railway'),
+    'username' => env('DB_USERNAME', 'postgres'),
+    'password' => env('DB_PASSWORD', ''),
     'charset' => 'utf8',
     'prefix' => '',
     'prefix_indexes' => true,
     'schema' => 'public',
     'sslmode' => 'prefer',
 ],
+
 
 
         'sqlsrv' => [
