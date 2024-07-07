@@ -82,7 +82,7 @@ return [
     'driver' => 'pgsql',
     'url' => env('DATABASE_URL'),
     'host' => env('PGHOST', 'localhost'), // Use PGHOST from .env
-    'port' => env('PGPORT', '13115'),      // Use PGPORT from .env
+    'port' => env('PGPORT', '5432'),      // Use PGPORT from .env
     'database' => env('POSTGRES_DB', 'railway'), // Use POSTGRES_DB from .env
     'username' => env('POSTGRES_USER', 'postgres'), // Use POSTGRES_USER from .env
     'password' => env('POSTGRES_PASSWORD', ''), // Use POSTGRES_PASSWORD from .env
